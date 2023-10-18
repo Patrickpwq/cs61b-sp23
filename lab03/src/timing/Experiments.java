@@ -1,5 +1,6 @@
 package timing;
 
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Stopwatch;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
@@ -59,9 +60,18 @@ public class Experiments {
         List<Double> times = new ArrayList<>();
         List<Integer> opCounts = new ArrayList<>();
 
-        // TODO: YOUR CODE HERE
+        for (int N = 1000; N <= 100000000; N *= 2) {
+            Ns.add(N);
+            opCounts.add(N);
+            Stopwatch sw = new Stopwatch();
+            AList<Integer> aList = new AList<>();
+            for (int i = 1;  i <= N; i++) {
+                aList.addLast(i);
+            }
+            times.add(sw.elapsedTime());
+        }
 
-        return null;
+        return new TimingData(Ns, times, opCounts);
     }
 
 
@@ -71,16 +81,29 @@ public class Experiments {
         List<Integer> opCounts = new ArrayList<>();
 
         // TODO: YOUR CODE HERE
-
-        return null;
+        for (int N = 1000; N <= 128000; N *= 2) {
+            Ns.add(N);
+            SLList<Integer> slList = new SLList<>();
+            for (int i = 1;  i <= N; i++) {
+                slList.addLast(i);
+            }
+            Stopwatch sw = new Stopwatch();
+            int M = 10000;
+            for (int i = 0; i < M; i++) {
+                slList.getLast();
+            }
+            opCounts.add(M);
+            times.add(sw.elapsedTime());
+        }
+        return new TimingData(Ns, times, opCounts);
 
     }
 
     public static void main(String[] args) {
         // TODO: Modify the following line to change the experiment you're running
-        TimingData td = exampleFibonacciExperiment();
+        TimingData td = timeSLListGetLast();
         // Modify this line to make the chart title make sense
-        String title = "Naive Recursive Fibonacci";
+        String title = "SLList test";
 
         // Convert "times" (in seconds) and "opCounts" to nanoseconds / op
         List<Double> timesUsPerOp = new ArrayList<>();
