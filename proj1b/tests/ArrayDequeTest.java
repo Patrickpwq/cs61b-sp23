@@ -105,4 +105,101 @@ public class ArrayDequeTest {
         assertThat(ad.removeLast()).isEqualTo('b');
         assertThat(ad.removeLast()).isEqualTo('a');
     }
+    //mainly test resize
+    @Test
+    public void integratedTest1() {
+        ArrayDeque<Character> ad = new ArrayDeque<>();
+
+        ad.addLast('i');
+        ad.addLast('j');
+        ad.addLast('p');
+        ad.addLast('p');
+        ad.addLast('p');
+        ad.addLast('p');
+        ad.addLast('p');
+        ad.addLast('p');
+        int length1 = ad.getItemsLength();
+
+        ad.addLast('p');
+        // [i, j, p, p, p, p, p, p, p, ...] , already resized
+        int length2 = ad.getItemsLength();
+        assertThat(length2 > length1).isTrue();
+        ad.addFirst('a');
+        ad.addFirst('b');
+        ad.addFirst('c');
+        ad.addFirst('d');
+        ad.addFirst('e');
+        ad.addFirst('f');
+        ad.addFirst('g');
+        // [g, f, e, d, c, b, a, i, j, p, p, p, p, p, p, p]
+
+
+        ad.addFirst('h');
+        // already resize
+        // [g, f, e, d, c, b, a, i, j, p, p, p, p, p, p, p, ... , h]
+        int length3 = ad.getItemsLength();
+        assertThat(length3 > length2).isTrue();
+        assertThat(ad.get(0)).isEqualTo('h'); // h should be the last element
+
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();    //resize
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();    //resize
+        ad.removeLast();
+        ad.removeLast();
+        ad.removeLast();
+        int length4 = ad.getItemsLength();
+        assertThat(length4).isEqualTo(8);
+        ad.removeLast();
+    }
+
+    //test some edge cases
+    @Test
+    public void integratedTest2() {
+        ArrayDeque<Character> ad = new ArrayDeque<>();
+
+        // if don't addFirst ever, will it still function well
+        ad.addLast('a');
+        assertThat(ad.get(0)).isEqualTo('a');
+        ad.addLast('b');
+        ad.addLast('c');
+        ad.addLast('d');
+        assertThat(ad.removeFirst()).isEqualTo('a');
+        assertThat(ad.removeFirst()).isEqualTo('b');
+        assertThat(ad.get(0)).isEqualTo('c');
+        assertThat(ad.get(1)).isEqualTo('d');
+        ad.removeLast();
+        assertThat(ad.get(0)).isEqualTo('c');
+
+        // check if last <= first works well
+        ad = new ArrayDeque<>();
+        ad.addLast('a');
+        ad.addLast('b');
+        ad.addLast('c');
+        ad.addLast('d');
+        ad.addLast('e');
+        ad.addLast('f');
+        ad.removeFirst(); ad.removeFirst(); ad.removeFirst();
+        assertThat(ad.toList()).isEqualTo(List.of('d', 'e', 'f'));
+        ad.removeFirst(); ad.removeFirst(); ad.removeFirst();
+        assertThat(ad.isEmpty()).isTrue();
+        //check empty list edge case
+        ad.addLast('a');    ad.removeFirst();
+        assertThat(ad.isEmpty()).isTrue();
+
+        ad.addFirst('b');   ad.removeLast();
+        assertThat(ad.isEmpty()).isTrue();
+
+
+    }
 }
